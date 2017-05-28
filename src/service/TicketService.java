@@ -1,10 +1,14 @@
 package service;
 
+import java.util.Date;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.Persistence;
 
-import dao.TicketDao;
+import dto.TicketDTO;
+import model.Event;
 import model.Ticket;
 
 public class TicketService {
@@ -16,37 +20,55 @@ public class TicketService {
 		entityManager = factory.createEntityManager();
 	}
 	
-	//Functie ce mapeaza un obiect de tip TicketDao la modelul Ticket
-	public Ticket mapDaoToModel(TicketDao dao){
+	//Functie ce mapeaza un obiect de tip Ticket la modelul TicketDTO
+	public TicketDTO mapModelToDto(Ticket ticket){
+		TicketDTO ticketDTO = new TicketDTO();
+		
+		ticketDTO.setId(ticket.getId());
+		ticketDTO.setOwner(ticket.getOwner());
+		ticketDTO.setBoughtAt(ticket.getBoughtAt());
+		ticketDTO.setCanceled(ticket.isCanceled());
+		ticketDTO.setEventId(ticket.getEvent().getId());
+		
+		return ticketDTO;
+	}
+	
+	//Functie ce mapeaza un TicketDTO la un obiect de tipul Ticket
+	public Ticket mapDtoToModel(TicketDTO model){
+		
 		Ticket ticket = new Ticket();
 		
-		ticket.setId(dao.getId());
-		ticket.setOwner(dao.getOwner());
-		ticket.setBoughtAt(dao.getBoughtAt());
+		ticket.setOwner(model.getOwner());
+		ticket.setBoughtAt(new Date());
+		ticket.setCanceled(false);
+		
 		
 		return ticket;
 	}
 	
-	//Functie ce mapeaza un model Ticket la un obiect de tipul TicketDao
-	public TicketDao mapModelToDao(Ticket model){
+	//Functie ce returneaza un TicketDTO cautat dupa id-ul sau
+	public TicketDTO getTicketDetails(int id) throws Exception{
 		
-		TicketDao dao = new TicketDao();
-		
-		dao.setBoughtAt(model.getBoughtAt());
-		dao.setOwner(model.getOwner());
-		
-		return dao;
-	}
+		Ticket ticket = findTicketById(id);
 	
-	//Functie ce returneaza un Ticket cautat dupa id-ul sau
-	public Ticket getTicketDetails(int id){
+		TicketDTO ticketDTO = mapModelToDto(ticket);
 		
-		TicketDao dao = (TicketDao)entityManager.createNamedQuery("getTicketById").setParameter("value", id).getSingleResult();
+		return ticketDTO;
 		
-		Ticket ticket = mapDaoToModel(dao);
+		
+	}
+
+	public Ticket findTicketById(int id) throws Exception{
+		Ticket ticket;
+		
+		ticket = entityManager.find(Ticket.class, id);
+		
+		if(ticket == null){
+			throw new Exception("The ticket with id " + id + " does not exist!");
+		}
 		
 		return ticket;
-		
-		
 	}
+
+	
 }

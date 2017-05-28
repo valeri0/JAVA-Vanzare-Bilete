@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import model.Event;
+import dto.EventDTO;
 import service.ServiceFactory;
 
 public class EventServiceTest {
@@ -15,15 +15,15 @@ public class EventServiceTest {
 	
 	@Test
 	public void test() {
-		List<Event> events = ServiceFactory.getEventService().getEvents();
+		List<EventDTO> eventDTOs = ServiceFactory.getEventService().getEvents();
 		
-		if(events.size()==0){
+		if(eventDTOs.size()==0){
 			fail("Cannot load from the database");
 		}
 
 
-		for(Event event : events){
-			System.out.println(event.getName());
+		for(EventDTO eventDTO : eventDTOs){
+			System.out.println(eventDTO.getName());
 		}
 		
 	}
