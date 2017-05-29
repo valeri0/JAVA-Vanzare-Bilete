@@ -87,14 +87,11 @@ public class ApplicationWebService {
 	 	
 	 	{
 			"eventId": value,
-			"owner": value,
-			"boughtAt": value
+			"owner": value
 		}
 		
 		Unde: eventId -> id-ul evenimentului la care se doreste achizitionarea biletului
 			  owner -> numele celui care achiztioneaza biletul
-			  boughtAt -> data la care s-a achizitionat biletul(numarul de milisecunde
-			  													distanta fata de 01-JAN-1970)
 	 	
 	 */
 	@POST
