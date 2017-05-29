@@ -68,7 +68,7 @@ public class ApplicationWebService {
 		
 		//in caz ca biletul exista, returnam un raspuns pozitiv si detaliile biletului
 		if(ticket != null){
-			return Response.ok(ticket).build();
+			return Response.status(Status.OK).entity(ticket).build();
 		}
 		
 		//in cazul in care nu exista vom afisa un mesaj de eroare
@@ -116,7 +116,11 @@ public class ApplicationWebService {
 		int status;
 		
 		try {
-			//cazul in care sunt bilete disponibile la eveniment
+			/*
+			 	Cazul in care sunt bilete disponibile la eveniment
+			 	si se achizitioneaza cu succes biletul
+			 */
+			
 			eventService.buyTicket(ticketDTO.getEventId(), ticket);
 			message = "Succesfully bought ticket for the event with id " + eventId;
 			status=201;
